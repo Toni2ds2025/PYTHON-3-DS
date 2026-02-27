@@ -18,3 +18,6 @@ class Aluno:
         print(f"Matricula: {self.matricula}")
         print(f"Curso {self.curso}")
         print("Notas: ")
+        for disciplina, nota in self.notas.items():
+            print(f" {disciplina}: {notas}")
+        print(f"Média: {self.calcular_media():.2f}")
