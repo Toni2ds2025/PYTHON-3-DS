@@ -1,8 +1,8 @@
-import tkinter as tkinter
-from tkinter import messagebox, simpledatalog
+import tkinter as tk
+from tkinter import messagebox, simpledialog
 
 class Veiculo:
-    def __init__(self, placa, madelo, ano):
+    def __init__(self, placa, modelo, ano):
         self.placa = placa
         self.modelo = modelo
         self.ano = ano
@@ -60,24 +60,48 @@ class App:
         self.root = root
         self.root.title("Locadora de veiculos")
 
-        tk Button(root, text="Cadastrar Veiculos", command=self.cadastrar_veiculo).pack(fill='x')
-        tk Button(root, text="Cadastrar Cliente", command=self.cadastrar_cliente).pack(fill='x')
-        tk Button(root, text="Alugar Veiculo", command=self.alugar_veiculo).pack(fill='x')
-        tk Button(root, text="Devolver Veiculos", command=self.devolver_veiculo).pack(fill='x')
-        tk Button(root, text="Listar Veiculos Disponíveis", command=self.listar_alugados).pack(fill='x')
-        tk Button(root, text="Listar Veiculos Alugados", command=self.listar_alugados).pack(fill='x')
+        tk.Button(root, text="Cadastrar Veiculos", command=self.cadastrar_veiculo).pack(fill='x')
+        tk.Button(root, text="Cadastrar Cliente", command=self.cadastrar_cliente).pack(fill='x')
+        tk.Button(root, text="Alugar Veiculo", command=self.alugar_veiculo).pack(fill='x')
+        tk.Button(root, text="Devolver Veiculos", command=self.devolver_veiculo).pack(fill='x')
+        tk.Button(root, text="Listar Veiculos Disponíveis", command=self.listar_disponiveis).pack(fill='x')
+        tk.Button(root, text="Listar Veiculos Alugados", command=self.listar_alugados).pack(fill='x')
 
     def cadastrar_veiculo(self):
-        placa = simpledatalog.askstring("Cadastro", "Placa:")
-        modelo = simpledatalog.askstring("Cadastro", "Modelo:")
-        ano = simpledatalog.askstring("Cadastro", "Ano:")
+        placa = simpledialog.askstring("Cadastro", "Placa:")
+        modelo = simpledialog.askstring("Cadastro", "Modelo:")
+        ano = simpledialog.askstring("Cadastro", "Ano:")
         if placa and modelo and ano:
             self.locadora.cadastrar_veiculo(Veiculo(placa, modelo, ano))
             messagebox.showinfo("Sucesso", "Veiculo cadastrado!")
 
     def cadastrar_cliente(self):
-        nome = simpledatalog.askstring("Cadastro", "Nome:")
-        cpf = simpledatalog.askstring("Cadastro", "CPF:")
+        nome = simpledialog.askstring("Cadastro", "Nome:")
+        cpf = simpledialog.askstring("Cadastro", "CPF:")
         if nome and cpf:
             self.locadora.cadastrar_cliente(Cliente(nome, cpf))
             messagebox.showinfo("Sucesso", "Cliente cadastrado!")
+
+    def alugar_veiculo(self):
+        cpf = simpledialog.askstring("Aluguel", "CPF do cliente:")
+        placa = simpledialog.askstring("Aluguel", "Placa do veículo:")
+        resultado = self.locadora.alugar_veiculo(cpf, placa)
+        messagebox.showinfo("Resultado", resultado)
+        
+    def devolver_veiculo(self):
+        placa = simpledialog.askstring("Devolução", "Placa do veículo:")
+        resultado = self.locadora.devolver_veiculo(placa)
+        messagebox.showinfo("Resultado", resultado)
+
+    def listar_disponiveis(self):
+        veiculos = self.locadora.alugar_veiculo(True)
+        messagebox.showinfo("Resultado", "\n".join(veiculos) if veiculos else "Nenhum disponível.")
+
+    def listar_alugados(self):
+        veiculos = self.locadora.listar_veiculos(False)
+        messagebox.showinfo("Alugados", "\n".join(veiculos) if veiculos else "Nenhum alugado.")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = App(root)
+    root.mainloop()
